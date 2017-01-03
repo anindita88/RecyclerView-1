@@ -7,6 +7,7 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -22,6 +23,7 @@ public class InputActivity extends AppCompatActivity {
     ImageView ivFoto;
     Uri uriFoto;
     Hotel hotel;
+    Button buttonSimpan;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,27 +33,8 @@ public class InputActivity extends AppCompatActivity {
         etJudul = (EditText) findViewById(R.id.editTextNama);
         etDeskripsi = (EditText) findViewById(R.id.editTextDeskripsi);
         etDetail = (EditText) findViewById(R.id.editTextDetail);
-        etLokasi =(EditText) findViewById(R.id.editTextLokasi);
+        etLokasi = (EditText) findViewById(R.id.editTextLokasi);
         ivFoto = (ImageView) findViewById(R.id.imageViewFoto);
-
-        ivFoto.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                pickPhoto();
-            }
-        });
-
-        findViewById(R.id.buttonSimpan).setOnClickListener(
-                new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        doSave();
-                    }
-                });
 
         hotel = (Hotel) getIntent().getSerializableExtra(MainActivity.HOTEL);
         if(hotel!=null)
@@ -63,35 +46,39 @@ public class InputActivity extends AppCompatActivity {
         {
             setTitle("New Hotel");
         }
+
+        ivFoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                pickPhoto();
+            }
+        });
+
+        findViewById(R.id.buttonSimpan).setOnClickListener(
+                new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        doSave();
+                    }
+                });
     }
-
-    private void fillData()
-    {
-        etJudul.setText(hotel.judul);
-        etDeskripsi.setText(hotel.deskripsi);
-        etDetail.setText(hotel.detail);
-        etLokasi.setText(hotel.lokasi);
-        uriFoto = Uri.parse(hotel.foto);
-        ivFoto.setImageURI(uriFoto);
-    }
-
-    private void doSave()
-    {
-        String judul = etJudul.getText().toString();
-        String deskripsi = etDeskripsi.getText().toString();
-        String detail = etDetail.getText().toString();
-        String lokasi = etLokasi.getText().toString();
-
-        if (isValid(judul, deskripsi, detail, lokasi, uriFoto))
+        private void doSave()
         {
-            hotel = new Hotel(judul, deskripsi, detail, lokasi, uriFoto.toString());
+            String judul = etJudul.getText().toString();
+            String deskripsi = etDeskripsi.getText().toString();
+            String detail = etDetail.getText().toString();
+            String lokasi = etLokasi.getText().toString();
 
-            Intent intent = new Intent();
-            intent.putExtra(MainActivity.HOTEL, hotel);
-            setResult(RESULT_OK, intent);
-            finish();
+            if (isValid(judul, deskripsi, detail, lokasi, uriFoto))
+            {
+                hotel = new Hotel(judul, deskripsi, detail, lokasi, uriFoto.toString());
+
+                Intent intent = new Intent();
+                intent.putExtra(MainActivity.HOTEL, hotel);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
         }
-    }
 
     private boolean isValid (String judul, String deskripsi, String detail, String lokasi, Uri uriFoto)
     {
@@ -129,7 +116,6 @@ public class InputActivity extends AppCompatActivity {
 
         return valid;
     }
-
     private void setErrorEmpty(EditText editText){
         editText.setError(((TextInputLayout)
                 editText.getParent()).getHint() + "Belum Diisi");
@@ -153,4 +139,16 @@ public class InputActivity extends AppCompatActivity {
             ivFoto.setImageURI(uriFoto);
         }
     }
+    private void fillData()
+    {
+        etJudul.setText(hotel.judul);
+        etDeskripsi.setText(hotel.deskripsi);
+        etDetail.setText(hotel.detail);
+        etLokasi.setText(hotel.lokasi);
+        uriFoto = Uri.parse(hotel.foto);
+        ivFoto.setImageURI(uriFoto);
+    }
 }
+
+
+
